@@ -82,6 +82,17 @@ elif authentication_status:
                 col3.metric("❌ Not Comply", not_comply_count)
                 col4.metric("⏳ Not Yet Assess", not_yet_assess_count)
 
+                # Hitung dan tampilkan persentase accuracy
+                total_assessed = total_docs - not_yet_assess_count
+                if total_assessed > 0:
+                    accuracy_percentage = (comply_count / total_assessed) * 100
+                    accuracy_label = f"{accuracy_percentage:.2f}%"
+                else:
+                    accuracy_label = "N/A"
+
+                st.markdown("### ✅ Persentase Accuracy")
+                st.metric(label="Accuracy (%)", value=accuracy_label)
+
                 # Pie chart distribusi
                 st.subheader("📈 Distribusi Status Accuracy")
                 status_counts = df["Accuracy"].value_counts()
