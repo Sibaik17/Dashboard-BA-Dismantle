@@ -4,7 +4,16 @@ import matplotlib.pyplot as plt
 import streamlit_authenticator as stauth
 
 # ===============================
-# KONFIGURASI LOGIN (fixed - hashed password)
+# OPSIONAL: Generate Hash Baru dari Password
+# ===============================
+with st.expander("🔐 Generate hashed password (opsional, untuk admin dev use only)"):
+    new_password = st.text_input("Masukkan password untuk di-hash", type="password")
+    if new_password:
+        hashed = stauth.Hasher([new_password]).generate()[0]
+        st.code(hashed, language="plaintext")
+
+# ===============================
+# KONFIGURASI LOGIN
 # ===============================
 credentials = {
     "usernames": {
@@ -17,15 +26,15 @@ credentials = {
 
 authenticator = stauth.Authenticate(
     credentials,
-    "ba_dashboard",        # cookie name
-    "abcdef123456",        # signature key
+    "ba_dashboard",       # cookie name
+    "abcdef123456",       # signature key
     cookie_expiry_days=1
 )
 
 name, authentication_status, username = authenticator.login("Login", location="sidebar")
 
 # ===============================
-# HANDLE LOGIN STATUS
+# HANDLE LOGIN
 # ===============================
 if authentication_status is False:
     st.error("Username atau password salah.")
@@ -36,7 +45,7 @@ elif authentication_status:
     st.sidebar.success(f"Selamat datang, {name} 👋")
 
     # ===============================
-    # DASHBOARD MULAI DI SINI
+    # DASHBOARD UTAMA
     # ===============================
     st.set_page_config(page_title="Dashboard BA Dismantle", layout="wide")
     st.title("📊 Dashboard Monitoring Assessment BA Dismantle")
@@ -62,14 +71,14 @@ elif authentication_status:
                 not_comply_count = (df["Accuracy"] == "Not Comply").sum()
                 not_yet_assess_count = (df["Accuracy"] == "Not Yet Assess").sum()
 
-                # Tampilan metric
+                # Tampilkan metric ringkasan
                 col1, col2, col3, col4 = st.columns(4)
                 col1.metric("📄 Total Dokumen", total_docs)
                 col2.metric("✅ Comply", comply_count)
                 col3.metric("❌ Not Comply", not_comply_count)
                 col4.metric("⏳ Not Yet Assess", not_yet_assess_count)
 
-                # Pie chart
+                # Pie chart distribusi
                 st.subheader("📈 Distribusi Status Accuracy")
                 status_counts = df["Accuracy"].value_counts()
                 fig, ax = plt.subplots()
@@ -77,7 +86,7 @@ elif authentication_status:
                 ax.axis('equal')
                 st.pyplot(fig)
 
-                # Detail Not Comply / Not Yet Assess
+                # Tabel detail Not Comply / Not Yet Assess
                 st.subheader("🔍 Detail Remarks (Not Comply / Not Yet Assess)")
                 filtered_df = df[df["Accuracy"].isin(["Not Comply", "Not Yet Assess"])]
                 st.dataframe(filtered_df[["SiteID", "SiteName", "Accuracy", "Detail"]], use_container_width=True)
