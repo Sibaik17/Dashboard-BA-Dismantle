@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+import plotly.express as px
 import streamlit_authenticator as stauth
 
 # ===============================
@@ -116,24 +117,26 @@ elif authentication_status:
                     st.markdown("#### ❌ Detail Remarks - Not Comply")
                     not_comply_details = df[df["Accuracy"] == "Not Comply"]["Detail"].value_counts()
                     if not not_comply_details.empty:
-                        fig_nc, ax_nc = plt.subplots()
-                        ax_nc.pie(not_comply_details, labels=not_comply_details.index, autopct='%1.1f%%', startangle=90)
-                        ax_nc.axis('equal')
-                        st.pyplot(fig_nc)
-                    else:
-                        st.info("Tidak ada data 'Not Comply'.")
+                        fig_nc = px.pie(
+                            names=not_comply_details.index,
+                            values=not_comply_details.values,
+                            title="Detail Remarks - Not Comply
+                        )
+                        fig_nc.update_traces(textinfo='percent+label', hoverinfo='label+value+percent')
+                        st.plotly_chart(fig_nc, use_container_width=True)
                 
                 # Pie Chart untuk NY Assessed
                 with col_right:
                     st.markdown("#### ⏳ Detail Remarks - NY Assessed")
                     ny_assessed_details = df[df["Accuracy"] == "NY Assessed"]["Detail"].value_counts()
                     if not ny_assessed_details.empty:
-                        fig_ny, ax_ny = plt.subplots()
-                        ax_ny.pie(ny_assessed_details, labels=ny_assessed_details.index, autopct='%1.1f%%', startangle=90)
-                        ax_ny.axis('equal')
-                        st.pyplot(fig_ny)
-                    else:
-                        st.info("Tidak ada data 'NY Assessed'.")
+                        fig_nc = px.pie(
+                            names=ny_assessed_details.index,
+                            values=ny_assessed_details.values,
+                            title="Detail Remarks - Not Comply
+                        )
+                        fig_ny.update_traces(textinfo='percent+label', hoverinfo='label+value+percent')
+                        st.plotly_chart(fig_ny, use_container_width=True)
 
                 # Tabel detail Not Comply / Not Yet Assess
                 st.subheader("🔍 Detail Remarks (Not Comply / NY Assessed)")
