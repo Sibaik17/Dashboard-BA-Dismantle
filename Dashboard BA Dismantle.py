@@ -120,7 +120,7 @@ elif authentication_status:
                         fig_nc = px.pie(
                             names=not_comply_details.index,
                             values=not_comply_details.values,
-                            title="Detail Remarks - Not Comply
+                            title="Detail Remarks - Not Comply"
                         )
                         fig_nc.update_traces(textinfo='percent+label', hoverinfo='label+value+percent')
                         st.plotly_chart(fig_nc, use_container_width=True)
@@ -130,10 +130,10 @@ elif authentication_status:
                     st.markdown("#### ⏳ Detail Remarks - NY Assessed")
                     ny_assessed_details = df[df["Accuracy"] == "NY Assessed"]["Detail"].value_counts()
                     if not ny_assessed_details.empty:
-                        fig_nc = px.pie(
+                        fig_ny = px.pie(
                             names=ny_assessed_details.index,
                             values=ny_assessed_details.values,
-                            title="Detail Remarks - Not Comply
+                            title="Detail Remarks - Not Comply"
                         )
                         fig_ny.update_traces(textinfo='percent+label', hoverinfo='label+value+percent')
                         st.plotly_chart(fig_ny, use_container_width=True)
