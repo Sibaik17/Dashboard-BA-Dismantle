@@ -2,4 +2,5 @@ streamlit
 pandas
 openpyxl
 matplotlib
+plotly
 streamlit-authenticator==0.2.2
