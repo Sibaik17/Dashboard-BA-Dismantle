@@ -102,6 +102,19 @@ elif authentication_status:
                 ax.axis('equal')
                 st.pyplot(fig)
 
+                # Pie chart khusus Not Comply vs NY Assessed
+                st.subheader("📉 Distribusi Dokumen Tidak Sesuai dan Belum Dinilai")
+                subset_status = df[df["Accuracy"].isin(["Not Comply", "NY Assessed"])]
+                subset_counts = subset_status["Accuracy"].value_counts()
+                
+                if not subset_counts.empty:
+                    fig2, ax2 = plt.subplots()
+                    ax2.pie(subset_counts, labels=subset_counts.index, autopct='%1.1f%%', startangle=90)
+                    ax2.axis('equal')
+                    st.pyplot(fig2)
+                else:
+                    st.info("Tidak ada data untuk Not Comply dan NY Assessed.")
+
                 # Tabel detail Not Comply / Not Yet Assess
                 st.subheader("🔍 Detail Remarks (Not Comply / NY Assessed)")
                 filtered_df = df[df["Accuracy"].isin(["Not Comply", "NY Assessed"])]
