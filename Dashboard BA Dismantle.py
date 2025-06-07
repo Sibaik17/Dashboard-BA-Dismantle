@@ -92,6 +92,7 @@ elif authentication_status:
 
                 st.markdown("### ✅ Persentase Accuracy")
                 st.metric(label="Accuracy (%)", value=accuracy_label)
+                st.caption("Persentase akurasi ini diukur dengan membandingkan jumlah dokumen comply dibagi dengan total dokumen semuanya dan dikurang dokumen yang belum dilakukan assessment (Not Yet Assess).")
 
                 # Pie chart distribusi
                 st.subheader("📈 Distribusi Status Accuracy")
