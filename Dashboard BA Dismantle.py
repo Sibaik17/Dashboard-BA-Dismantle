@@ -73,7 +73,7 @@ elif authentication_status:
                 total_docs = len(df)
                 comply_count = (df["Accuracy"] == "Comply").sum()
                 not_comply_count = (df["Accuracy"] == "Not Comply").sum()
-                not_yet_assess_count = (df["Accuracy"] == "NY Assessed").sum()
+                ny_assess_count = (df["Accuracy"] == "NY Assessed").sum()
 
                 # Tampilkan metric ringkasan
                 col1, col2, col3, col4 = st.columns(4)
