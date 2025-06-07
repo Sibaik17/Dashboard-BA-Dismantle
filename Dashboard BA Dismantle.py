@@ -4,35 +4,28 @@ import matplotlib.pyplot as plt
 import streamlit_authenticator as stauth
 
 # ===============================
-# KONFIGURASI LOGIN
+# KONFIGURASI LOGIN (fixed - hashed password)
 # ===============================
-# Buat kredensial user login
 credentials = {
     "usernames": {
         "admin": {
             "name": "Admin User",
-            "password": stauth.Hasher(["admin123"]).generate()[0]
-        },
-        "olivia": {
-            "name": "Olivia",
-            "password": stauth.Hasher(["olivia456"]).generate()[0]
+            "password": "$2b$12$7r9pLZjcnU9oURskxK7nAevJVRZVm7QffxvUmE9gZ5mP4g07EB7v2"  # hashed admin123
         }
     }
 }
 
-# Setup autentikasi
 authenticator = stauth.Authenticate(
     credentials,
-    "ba_dashboard",         # Cookie name (bebas)
-    "abcdef123456",         # Signature key (bebas, bisa UUID)
+    "ba_dashboard",        # cookie name
+    "abcdef123456",        # signature key
     cookie_expiry_days=1
 )
 
-# Form login
 name, authentication_status, username = authenticator.login("Login", "main")
 
 # ===============================
-# HANDLE STATUS LOGIN
+# HANDLE LOGIN STATUS
 # ===============================
 if authentication_status is False:
     st.error("Username atau password salah.")
@@ -43,13 +36,12 @@ elif authentication_status:
     st.sidebar.success(f"Selamat datang, {name} 👋")
 
     # ===============================
-    # DASHBOARD STARTS HERE
+    # DASHBOARD MULAI DI SINI
     # ===============================
     st.set_page_config(page_title="Dashboard BA Dismantle", layout="wide")
     st.title("📊 Dashboard Monitoring Assessment BA Dismantle")
 
-    # Upload file Excel
-    uploaded_file = st.file_uploader("📂 Upload file Excel", type=["xlsx"])
+    uploaded_file = st.file_uploader("📂 Upload file Excel (sheet: DismantlePerangkat)", type=["xlsx"])
 
     if uploaded_file:
         try:
@@ -58,35 +50,38 @@ elif authentication_status:
                 df = pd.read_excel(xls, sheet_name="DismantlePerangkat")
 
                 # Validasi kolom
-                if "Accuracy" in df.columns and "Detail" in df.columns:
-                    # Hitung status dokumen
-                    total_docs = len(df)
-                    comply_count = (df["Accuracy"] == "Comply").sum()
-                    not_comply_count = (df["Accuracy"] == "Not Comply").sum()
-                    not_yet_assess_count = (df["Accuracy"] == "Not Yet Assess").sum()
+                required_columns = ["SiteID", "SiteName", "Accuracy", "Detail"]
+                missing_cols = [col for col in required_columns if col not in df.columns]
+                if missing_cols:
+                    st.error(f"❗ Kolom berikut tidak ditemukan: {', '.join(missing_cols)}")
+                    st.stop()
 
-                    # Tampilkan metric summary
-                    col1, col2, col3, col4 = st.columns(4)
-                    col1.metric("📄 Total Dokumen", total_docs)
-                    col2.metric("✅ Comply", comply_count)
-                    col3.metric("❌ Not Comply", not_comply_count)
-                    col4.metric("⏳ Not Yet Assess", not_yet_assess_count)
+                # Hitung status
+                total_docs = len(df)
+                comply_count = (df["Accuracy"] == "Comply").sum()
+                not_comply_count = (df["Accuracy"] == "Not Comply").sum()
+                not_yet_assess_count = (df["Accuracy"] == "Not Yet Assess").sum()
 
-                    # Pie chart distribusi
-                    st.subheader("📈 Distribusi Status Accuracy")
-                    status_counts = df["Accuracy"].value_counts()
-                    fig, ax = plt.subplots()
-                    ax.pie(status_counts, labels=status_counts.index, autopct='%1.1f%%', startangle=90)
-                    ax.axis('equal')
-                    st.pyplot(fig)
+                # Tampilan metric
+                col1, col2, col3, col4 = st.columns(4)
+                col1.metric("📄 Total Dokumen", total_docs)
+                col2.metric("✅ Comply", comply_count)
+                col3.metric("❌ Not Comply", not_comply_count)
+                col4.metric("⏳ Not Yet Assess", not_yet_assess_count)
 
-                    # Detail remarks untuk Not Comply / Not Yet Assess
-                    st.subheader("🔍 Detail Remarks (Not Comply / Not Yet Assess)")
-                    filtered_df = df[df["Accuracy"].isin(["Not Comply", "Not Yet Assess"])]
-                    st.dataframe(filtered_df[["SiteID", "SiteName", "Accuracy", "Detail"]], use_container_width=True)
-                else:
-                    st.error("❗ Kolom 'Accuracy' dan/atau 'Detail' tidak ditemukan dalam sheet.")
+                # Pie chart
+                st.subheader("📈 Distribusi Status Accuracy")
+                status_counts = df["Accuracy"].value_counts()
+                fig, ax = plt.subplots()
+                ax.pie(status_counts, labels=status_counts.index, autopct='%1.1f%%', startangle=90)
+                ax.axis('equal')
+                st.pyplot(fig)
+
+                # Detail Not Comply / Not Yet Assess
+                st.subheader("🔍 Detail Remarks (Not Comply / Not Yet Assess)")
+                filtered_df = df[df["Accuracy"].isin(["Not Comply", "Not Yet Assess"])]
+                st.dataframe(filtered_df[["SiteID", "SiteName", "Accuracy", "Detail"]], use_container_width=True)
             else:
-                st.error("❗ Sheet 'DismantlePerangkat' tidak ditemukan dalam file Excel.")
+                st.error("❗ Sheet 'DismantlePerangkat' tidak ditemukan.")
         except Exception as e:
             st.error(f"Terjadi kesalahan saat membaca file: {e}")
