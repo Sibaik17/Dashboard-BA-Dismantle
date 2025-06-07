@@ -4,6 +4,11 @@ import matplotlib.pyplot as plt
 import streamlit_authenticator as stauth
 
 # ===============================
+# HARUS DI ATAS: Konfigurasi halaman
+# ===============================
+st.set_page_config(page_title="Dashboard BA Dismantle", layout="wide")
+
+# ===============================
 # OPSIONAL: Generate Hash Baru dari Password
 # ===============================
 with st.expander("🔐 Generate hashed password (opsional, untuk admin dev use only)"):
@@ -47,7 +52,6 @@ elif authentication_status:
     # ===============================
     # DASHBOARD UTAMA
     # ===============================
-    st.set_page_config(page_title="Dashboard BA Dismantle", layout="wide")
     st.title("📊 Dashboard Monitoring Assessment BA Dismantle")
 
     uploaded_file = st.file_uploader("📂 Upload file Excel (sheet: DismantlePerangkat)", type=["xlsx"])
