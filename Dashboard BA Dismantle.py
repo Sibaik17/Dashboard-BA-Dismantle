@@ -122,7 +122,9 @@ elif authentication_status:
                             values=not_comply_details.values,
                             title="Detail Remarks - Not Comply"
                         )
-                        fig_nc.update_traces(textinfo= 'percent+label', hoverinfo= 'value+percent')
+                        fig_nc.update_traces(textinfo= 'percent+label',
+                                             hovertemplate= "%{label}<br>Value = %{value}<br>Percent = %{percent}<extra></extra>"
+                                            )
                         st.plotly_chart(fig_nc, use_container_width=True)
                 
                 # Pie Chart untuk NY Assessed
@@ -135,7 +137,9 @@ elif authentication_status:
                             values=ny_assessed_details.values,
                             title="Detail Remarks - Not Comply"
                         )
-                        fig_ny.update_traces(textinfo= 'percent+label', hoverinfo= 'value+percent')
+                        fig_ny.update_traces(textinfo= 'percent+label',
+                                             hovertemplate= "%{label}<br>Value = %{value}<br>Percent = %{percent}<extra></extra>"
+                                            )
                         st.plotly_chart(fig_ny, use_container_width=True)
 
                 # Tabel detail Not Comply / Not Yet Assess
