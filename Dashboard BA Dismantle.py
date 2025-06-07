@@ -83,7 +83,7 @@ elif authentication_status:
                 col4.metric("⏳ Not Yet Assess", ny_assess_count)
 
                 # Hitung dan tampilkan persentase accuracy
-                total_assessed = total_docs - not_yet_assess_count
+                total_assessed = total_docs - ny_assess_count
                 if total_assessed > 0:
                     accuracy_percentage = (comply_count / total_assessed) * 100
                     accuracy_label = f"{accuracy_percentage:.2f}%"
