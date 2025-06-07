@@ -94,26 +94,46 @@ elif authentication_status:
                 st.metric(label="Accuracy (%)", value=accuracy_label)
                 st.caption("Persentase akurasi ini diukur dengan membandingkan jumlah dokumen comply dibagi dengan total dokumen semuanya dan dikurang dokumen yang belum dilakukan assessment (Not Yet Assess).")
 
-                # Pie chart distribusi
-                st.subheader("📈 Distribusi Status Accuracy")
-                status_counts = df["Accuracy"].value_counts()
-                fig, ax = plt.subplots()
-                ax.pie(status_counts, labels=status_counts.index, autopct='%1.1f%%', startangle=90)
-                ax.axis('equal')
-                st.pyplot(fig)
-
-                # Pie chart khusus Not Comply vs NY Assessed
-                st.subheader("📉 Distribusi Dokumen Tidak Sesuai dan Belum Dinilai")
-                subset_status = df[df["Accuracy"].isin(["Not Comply", "NY Assessed"])]
-                subset_counts = subset_status["Accuracy"].value_counts()
+                # === PIE CHART BERDAMPINGAN ===
+                col_pie1, col_pie2 = st.columns(2)
                 
-                if not subset_counts.empty:
-                    fig2, ax2 = plt.subplots()
-                    ax2.pie(subset_counts, labels=subset_counts.index, autopct='%1.1f%%', startangle=90)
-                    ax2.axis('equal')
-                    st.pyplot(fig2)
-                else:
-                    st.info("Tidak ada data untuk Not Comply dan NY Assessed.")
+                # Pie chart distribusi status accuracy
+                with col_pie1:
+                    st.subheader("📈 Distribusi Status Accuracy")
+                    status_counts = df["Accuracy"].value_counts()
+                    fig, ax = plt.subplots()
+                    ax.pie(status_counts, labels=status_counts.index, autopct='%1.1f%%', startangle=90)
+                    ax.axis('equal')
+                    st.pyplot(fig)
+                
+                # PIE CHART REMARKS PER STATUS
+                st.subheader("🧾 Distribusi Detail Remarks per Status")
+
+                col_left, col_right = st.columns(2)
+                
+                # Pie Chart untuk Not Comply
+                with col_left:
+                    st.markdown("#### ❌ Detail Remarks - Not Comply")
+                    not_comply_details = df[df["Accuracy"] == "Not Comply"]["Detail"].value_counts()
+                    if not not_comply_details.empty:
+                        fig_nc, ax_nc = plt.subplots()
+                        ax_nc.pie(not_comply_details, labels=not_comply_details.index, autopct='%1.1f%%', startangle=90)
+                        ax_nc.axis('equal')
+                        st.pyplot(fig_nc)
+                    else:
+                        st.info("Tidak ada data 'Not Comply'.")
+                
+                # Pie Chart untuk NY Assessed
+                with col_right:
+                    st.markdown("#### ⏳ Detail Remarks - NY Assessed")
+                    ny_assessed_details = df[df["Accuracy"] == "NY Assessed"]["Detail"].value_counts()
+                    if not ny_assessed_details.empty:
+                        fig_ny, ax_ny = plt.subplots()
+                        ax_ny.pie(ny_assessed_details, labels=ny_assessed_details.index, autopct='%1.1f%%', startangle=90)
+                        ax_ny.axis('equal')
+                        st.pyplot(fig_ny)
+                    else:
+                        st.info("Tidak ada data 'NY Assessed'.")
 
                 # Tabel detail Not Comply / Not Yet Assess
                 st.subheader("🔍 Detail Remarks (Not Comply / NY Assessed)")
