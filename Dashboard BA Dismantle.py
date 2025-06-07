@@ -73,14 +73,14 @@ elif authentication_status:
                 total_docs = len(df)
                 comply_count = (df["Accuracy"] == "Comply").sum()
                 not_comply_count = (df["Accuracy"] == "Not Comply").sum()
-                not_yet_assess_count = (df["Accuracy"] == "Not Yet Assess").sum()
+                not_yet_assess_count = (df["Accuracy"] == "NY Assessed").sum()
 
                 # Tampilkan metric ringkasan
                 col1, col2, col3, col4 = st.columns(4)
                 col1.metric("📄 Total Dokumen", total_docs)
                 col2.metric("✅ Comply", comply_count)
                 col3.metric("❌ Not Comply", not_comply_count)
-                col4.metric("⏳ Not Yet Assess", not_yet_assess_count)
+                col4.metric("⏳ Not Yet Assess", ny_assess_count)
 
                 # Hitung dan tampilkan persentase accuracy
                 total_assessed = total_docs - not_yet_assess_count
@@ -103,7 +103,7 @@ elif authentication_status:
 
                 # Tabel detail Not Comply / Not Yet Assess
                 st.subheader("🔍 Detail Remarks (Not Comply / Not Yet Assess)")
-                filtered_df = df[df["Accuracy"].isin(["Not Comply", "Not Yet Assess"])]
+                filtered_df = df[df["Accuracy"].isin(["Not Comply", "NY Assess"])]
                 st.dataframe(filtered_df[["SiteID", "SiteName", "Accuracy", "Detail"]], use_container_width=True)
             else:
                 st.error("❗ Sheet 'DismantlePerangkat' tidak ditemukan.")
