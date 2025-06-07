@@ -10,7 +10,7 @@ credentials = {
     "usernames": {
         "admin": {
             "name": "Admin User",
-            "password": "$2b$12$7r9pLZjcnU9oURskxK7nAevJVRZVm7QffxvUmE9gZ5mP4g07EB7v2"  # hashed admin123
+            "password": "$2b$12$uL8kj4e1KTSUs1XMrKOd4.L9/EgYe12tw7UeRDwq7x6ZIXn7iH14C"  # hashed admin123
         }
     }
 }
