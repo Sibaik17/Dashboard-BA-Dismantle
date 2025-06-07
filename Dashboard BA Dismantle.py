@@ -103,9 +103,9 @@ elif authentication_status:
                 st.pyplot(fig)
 
                 # Tabel detail Not Comply / Not Yet Assess
-                st.subheader("🔍 Detail Remarks (Not Comply / Not Yet Assess)")
+                st.subheader("🔍 Detail Remarks (Not Comply / NY Assess)")
                 filtered_df = df[df["Accuracy"].isin(["Not Comply", "NY Assess"])]
-                st.dataframe(filtered_df[["SiteID", "SiteName", "Accuracy", "Detail"]], use_container_width=True)
+                st.dataframe(filtered_df[["SONumb", "SiteName", "Accuracy", "Detail"]], use_container_width=True)
             else:
                 st.error("❗ Sheet 'DismantlePerangkat' tidak ditemukan.")
         except Exception as e:
