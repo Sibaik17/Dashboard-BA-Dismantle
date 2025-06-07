@@ -96,16 +96,20 @@ elif authentication_status:
                 st.caption("Persentase akurasi ini diukur dengan membandingkan jumlah dokumen comply dibagi dengan total dokumen semuanya dan dikurang dokumen yang belum dilakukan assessment (Not Yet Assess).")
 
                 # === PIE CHART BERDAMPINGAN ===
-                col_pie1, col_pie2 = st.columns(2)
+                center_col = st.columns([1, 2, 1])[1]
                 
                 # Pie chart distribusi status accuracy
-                with col_pie1:
+                with center_col:
                     st.subheader("📈 Distribusi Status Accuracy")
                     status_counts = df["Accuracy"].value_counts()
-                    fig, ax = plt.subplots()
-                    ax.pie(status_counts, labels=status_counts.index, autopct='%1.1f%%', startangle=90)
-                    ax.axis('equal')
-                    st.pyplot(fig)
+                    fig = px.pie(
+                        names=status_counts.index,
+                        values=status_counts.values,
+                        title="Distribusi Status Accuracy",
+                        hole=0.3
+                    )
+                    fig.update_traces(textinfo='percent+label', hovertemplate="%{label}<br>Value = %{value}<extra></extra>")
+                    st.plotly_chart(fig, use_container_width=True)
                 
                 # PIE CHART REMARKS PER STATUS
                 st.subheader("🧾 Distribusi Detail Remarks per Status")
