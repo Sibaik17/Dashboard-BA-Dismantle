@@ -55,7 +55,7 @@ elif authentication_status:
     # ===============================
     st.title("📊 Dashboard Monitoring Assessment BA Dismantle")
 
-    uploaded_file = st.file_uploader("📂 Upload file Excel (sheet: DismantlePerangkat)", type=["xlsx"])
+    uploaded_file = st.sidebar.file_uploader("📂 Upload file Excel (sheet: DismantlePerangkat)", type=["xlsx"])
 
     if uploaded_file:
         try:
