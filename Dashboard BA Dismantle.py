@@ -139,7 +139,7 @@ elif authentication_status:
                         fig_ny = px.pie(
                             names=ny_assessed_details.index,
                             values=ny_assessed_details.values,
-                            title="Detail Remarks - Not Comply"
+                            title="Detail Remarks - Not Yet Assessed"
                         )
                         fig_ny.update_traces(textinfo= 'percent+label',
                                              hovertemplate= "%{label}<br>Value = %{value}<br>Percent = %{percent}<extra></extra>"
